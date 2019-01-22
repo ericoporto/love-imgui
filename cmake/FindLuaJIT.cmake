@@ -7,6 +7,10 @@
 set(LUAJIT_SEARCH_PATHS
 	/usr/local
 	/usr
+    c:/usr/local/lib
+    c:/usr/local
+    c:/usr/lib
+    c:/usr
 	$ENV{LUAJIT_DIR}
 	)
 

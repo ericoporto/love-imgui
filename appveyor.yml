@@ -1,0 +1,35 @@
+version: 0.9.{build}
+image: Visual Studio 2017
+configuration: Release
+platform: x64
+
+build_script:
+    - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+    - set BUILD_DIR=%cd%
+    - cd ..
+    - curl -O http://luajit.org/download/LuaJIT-2.0.5.zip
+    - unzip LuaJIT-2.0.5.zip
+    - cd LuaJIT-2.0.5\src
+    - msvcbuild
+    - set LUAJIT_DIR=c:\projects\LuaJIT-2.0.5\src
+    - cd %BUILD_DIR%
+    - cmake -DCMAKE_GENERATOR_PLATFORM=x64 .
+    - msbuild Project.sln
+    - dir /s c:\projects\love-imgui
+
+test: off
+
+artifacts:
+    - path: $(configuration)\imgui.dll
+      name: love-imgui-win64.dll
+
+deploy:
+    provider: GitHub
+    auth_token:
+        secure: 0FI9i4tjFfPJYT2ModUijy23Pe3iYp6bizTQR5A4b7uUUwTu7YrniPtcq7JljWG/
+    artifact: /.*\.dll/
+    draft: false
+    prerelease: false
+    on:
+        branch: master                 # release from master branch only
+        appveyor_repo_tag: true        # deploy on tag push only
